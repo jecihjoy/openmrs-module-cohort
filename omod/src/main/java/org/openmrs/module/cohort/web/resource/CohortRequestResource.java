@@ -18,6 +18,7 @@ import org.openmrs.module.cohort.api.CohortService;
 import org.openmrs.module.cohort.rest.v1_0.resource.CohortRest;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
 import org.openmrs.module.webservices.rest.web.annotation.PropertySetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
@@ -35,45 +36,47 @@ public class CohortRequestResource extends DataDelegatingCrudResource<CohortM> {
 
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
-		if (Context.isAuthenticated()) {
-	        DelegatingResourceDescription description = new DelegatingResourceDescription();
-	        
-	        if (rep instanceof DefaultRepresentation) {
-	            description.addProperty("name");
-	            description.addProperty("description");
-	            description.addProperty("location");
-	            description.addProperty("startDate");
-	            description.addProperty("endDate");
-	            description.addProperty("attributes");
-	            description.addProperty("groupCohort");
-	            description.addProperty("uuid");
-	            description.addProperty("voided");
-                description.addProperty("voidReason");
-                description.addSelfLink();
-	        } 
-	        else if (rep instanceof FullRepresentation) {
-	            description.addProperty("name");
-	            description.addProperty("description");
-	            description.addProperty("location");
-	            description.addProperty("startDate");
-	            description.addProperty("endDate");
-	            description.addProperty("cohortType");
-	            description.addProperty("cohortProgram");
-	            description.addProperty("cohortLeaders");
-	            description.addProperty("attributes");
-	            description.addProperty("groupCohort");
-	            description.addProperty("cohortMembers", Representation.FULL);
-                description.addProperty("voided");
-                description.addProperty("voidReason");
-                description.addProperty("cohortVisits");
-	            description.addProperty("uuid");
-				description.addProperty("auditInfo");
-	            description.addSelfLink();
-	        }
-	        
-	        return description;
-		}
-		return null;
+        DelegatingResourceDescription description = new DelegatingResourceDescription();
+
+        if (rep instanceof DefaultRepresentation) {
+            description.addProperty("name");
+            description.addProperty("description");
+            description.addProperty("location");
+            description.addProperty("startDate");
+            description.addProperty("endDate");
+            description.addProperty("attributes");
+            description.addProperty("groupCohort");
+            description.addProperty("uuid");
+            description.addProperty("voided");
+            description.addProperty("voidReason");
+            description.addProperty("display");
+            description.addSelfLink();
+
+            return description;
+        } else if (rep instanceof FullRepresentation) {
+            description.addProperty("name");
+            description.addProperty("description");
+            description.addProperty("location");
+            description.addProperty("startDate");
+            description.addProperty("endDate");
+            description.addProperty("cohortType");
+            description.addProperty("cohortProgram");
+            description.addProperty("cohortLeaders");
+            description.addProperty("attributes");
+            description.addProperty("groupCohort");
+            description.addProperty("cohortMembers", Representation.FULL);
+            description.addProperty("voided");
+            description.addProperty("voidReason");
+            description.addProperty("cohortVisits");
+            description.addProperty("uuid");
+            description.addProperty("auditInfo");
+            description.addProperty("display");
+
+            description.addSelfLink();
+
+            return description;
+        }
+        return null;
     }
 
     @Override
@@ -229,6 +232,11 @@ public class CohortRequestResource extends DataDelegatingCrudResource<CohortM> {
                 cohort.addAttribute(attr);
             }
         }
+    }
+
+    @PropertyGetter("display")
+    public static String getDisplay(CohortM cohort) {
+        return cohort.getName();
     }
 
 }
